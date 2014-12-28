@@ -1,0 +1,71 @@
+﻿<Window x:Class="Questionnaire.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+	<StackPanel>
+		<ToggleButton x:Name="ToggleButton" IsChecked="{Binding ElementName=ankieta, Path=IsOpen}">
+			<ToggleButton.Style>
+				<Style TargetType="{x:Type ToggleButton}">
+					<Style.Triggers>
+						<Trigger Property="IsChecked" Value="False">
+							<Setter Property="Content" Value="Pokaż ankietę"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Content" Value="Ukryj ankietę"/>
+							<Setter Property="FontWeight" Value="Bold"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</ToggleButton.Style>
+		</ToggleButton>
+		
+		<Popup x:Name="ankieta" AllowsTransparency="True" PlacementTarget="{Binding ElementName=ToggleButton}">
+			<StackPanel>
+				<!-- Stylowanie w GroupBoxie
+				     TargetType="GroupBox" // TargetType="{x:Type GorupBox}" to jest rekomendowany zapis, ponieważ zadziała w każdej sytuacji-->
+				<StackPanel.Resources>
+					<!-- Nadałem dodatkowe właściwości aby wystylizować GroupBoxa. x:Key="HeaderStyle" dzięki temu będę mógł się odwołać z dowolnego miejsca-->
+					<Style TargetType="{x:Type GroupBox}" x:Key="HeaderStyle">
+						<Setter Property="Foreground" Value="Blue"/>
+						<Setter Property="Padding" Value="10"/>
+						<Setter Property="BorderThickness" Value="3"/>
+						<Setter Property="HeaderTemplate">
+							<Setter.Value>
+								<DataTemplate>
+									<TextBlock Text="{Binding}" Background="LightBlue" FontWeight="Bold"/>
+								</DataTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</StackPanel.Resources>
+				<GroupBox Margin="10" Header="Ile grasz dziennie na komputerze?" Style="{StaticResource HeaderStyle}">
+					<StackPanel Margin="10">
+						<RadioButton Content="wcale"/>
+						<RadioButton Content="1-3h"/>
+						<RadioButton Content="3-6h"/>
+						<RadioButton Content="24h"/>
+					</StackPanel>
+				</GroupBox>
+
+				<GroupBox Margin="10" Header="Ile dziennie spisz?" Style="{StaticResource HeaderStyle}">
+					<StackPanel Margin="10">
+						<RadioButton Content="wcale"/>
+						<RadioButton Content="1-3h"/>
+						<RadioButton Content="3-6h"/>
+						<RadioButton x:Name="wiecej">
+							<WrapPanel>
+								<Label Content="wiecej:"/>
+								<!-- Popup czyli okienko które się otwiera (na stronach internetowych często to są reklamy).
+						IsOpen jest zbindowane do RadioButtona, w momencie kiedy kliknę na RadioButton to zostanie przesłany IsChecked = true
+						Aby animacja zawsze poprawnie działała - potrzebny jest AllowsTransparency = True !!!!!!-->
+								<Popup IsOpen="{Binding ElementName=wiecej, Path=IsChecked}" Placement="Right" PopupAnimation="Scroll" AllowsTransparency="True">
+									<TextBox MinWidth="50"/>
+								</Popup>
+							</WrapPanel>
+						</RadioButton>
+					</StackPanel>
+				</GroupBox>
+			</StackPanel>
+		</Popup>
+	</StackPanel>
+</Window>
